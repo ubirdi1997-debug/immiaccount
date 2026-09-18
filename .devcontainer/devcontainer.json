@@ -1,0 +1,30 @@
+{
+  "name": "Application tracker Codespace",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "forwardPorts": [
+    8080,
+    8081
+  ],
+  "portsAttributes": {
+    "8080": {
+      "label": "Application tracker (nginx)",
+      "onAutoForward": "notify",
+      "protocol": "http"
+    },
+    "3000": {
+      "label": "Tracker backend (internal)",
+      "onAutoForward": "ignore"
+    },
+    "8081": {
+      "label": "Private VEVO proxy",
+      "onAutoForward": "notify",
+      "protocol": "http"
+    },
+    "3001": {
+      "label": "VEVO backend (internal)",
+      "onAutoForward": "ignore"
+    }
+  },
+  "postCreateCommand": "sudo apt-get update -qq && sudo apt-get install -y nginx",
+  "postStartCommand": "node tracker/deploy/manage.mjs start"
+}

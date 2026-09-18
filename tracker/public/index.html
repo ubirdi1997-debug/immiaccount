@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Application tracker</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/">Application<span>tracker</span></a><div id="session" hidden><span id="identity"></span><button id="logout" class="quiet">Sign out</button></div></header>
+  <main>
+    <div class="notice">Independent tracking portal · Records and review statuses are maintained by your administrator. This is not an Australian Government service.</div>
+    <p id="message" role="status" aria-live="polite"></p>
+    <section id="login-view" class="login card">
+      <div class="eyebrow">YOUR ACCOUNT</div><h1>A clear view of your progress.</h1><p class="muted">Sign in to see your details and the latest updates from your administrator.</p>
+      <form id="login-form"><label>Login ID<input name="login" autocomplete="username" required maxlength="64"></label><label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label><button class="primary">Sign in</button></form>
+      <p class="muted small">Use the login ID and password provided by your administrator.</p>
+    </section>
+    <section id="admin-view" hidden>
+      <div class="heading"><div><div class="eyebrow">ADMINISTRATION</div><h1>Manage applications</h1><p class="muted">Create accounts, maintain details and publish review updates.</p></div><button id="new-user" class="primary">+ Create user</button></div>
+      <div class="workspace">
+        <aside class="card roster"><h2>User accounts <span id="count" class="count">0</span></h2><label class="search-label">Search accounts<input id="search" type="search" placeholder="Name or login ID"></label><div id="user-list"></div></aside>
+        <section class="card"><div class="heading"><h2 id="editor-title">Create user</h2><span id="editing-id" class="muted small"></span></div>
+          <form id="record-form">
+            <fieldset><legend>Account access</legend><div class="grid"><label>Login ID<input id="user-login" required minlength="3" maxlength="64" pattern="[a-zA-Z0-9._-]+" autocomplete="off"></label><label><span id="password-label">Password</span><input id="user-password" type="password" minlength="12" maxlength="128" autocomplete="new-password"><small id="password-hint">At least 12 characters. Share securely with the user.</small></label></div></fieldset>
+            <fieldset><legend>Personal and reference details</legend><div id="personal-fields" class="grid"></div></fieldset>
+            <fieldset><legend>Visa details supplied to the administrator</legend><p class="muted small">Optional details from the user's documents. Enter only information available in those documents.</p><div id="visa-fields" class="grid"></div></fieldset>
+            <fieldset><legend>Internal review</legend><div class="grid"><label>Review status<select id="review-status"><option>In progress</option><option>Approved</option><option>Rejected</option></select><small id="status-hint">New accounts always start In progress.</small></label><label>Update note<textarea id="update-note" rows="3" maxlength="1000" placeholder="Visible to the user in their history"></textarea></label></div><label>Message to user<textarea id="record-note" rows="3" maxlength="2000"></textarea></label></fieldset>
+            <div class="form-footer"><span class="muted small">Changes and status updates receive a server timestamp.</span><button class="primary" id="save-user">Create account</button></div>
+          </form>
+        </section>
+      </div>
+      <section id="admin-preview" class="preview" hidden><div class="eyebrow">USER VIEW PREVIEW</div><div id="preview-result"></div></section>
+    </section>
+    <section id="user-view" hidden><div class="heading"><div><div class="eyebrow">YOUR ACCOUNT</div><h1>Application summary</h1><p class="muted">Your details and latest internal review updates.</p></div><button id="refresh" class="quiet">Refresh status</button></div><p class="muted small">Checks for updates every 30 seconds while this page is open.</p><div id="user-result"></div></section>
+    <details id="password-panel" class="card password-panel" hidden><summary>Change your password</summary><form id="password-form" class="grid"><label>Current password<input name="currentPassword" type="password" autocomplete="current-password" required maxlength="128"></label><label>New password<input name="password" type="password" autocomplete="new-password" required minlength="12" maxlength="128"></label><button class="primary">Update password</button></form></details>
+    <footer><p><a href="/downloads/vevo-helper.user.js">Install Firefox autofill userscript</a> · Saves autofill profiles separately in your browser.</p>For official visa details and conditions, visit <a href="https://online.immi.gov.au/evo/firstParty?actionType=query" target="_blank" rel="noopener noreferrer">Visa Entitlement Verification Online (VEVO) ↗</a>.</footer>
+  </main>
+</body>
+</html>

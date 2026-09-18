@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start VS Code bridge",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/gemma-vscode-bridge.mjs"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "runOptions": {
+        "runOn": "folderOpen",
+        "instanceLimit": 1
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start application tracker",
+      "type": "process",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/tracker/deploy/manage.mjs",
+        "start"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/tracker"
+      },
+      "runOptions": {
+        "runOn": "folderOpen",
+        "instanceLimit": 1
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "application-tracker",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "setup": "node setup.mjs",
+    "test": "node --test",
+    "deploy": "node deploy/manage.mjs start",
+    "restart": "node deploy/manage.mjs restart",
+    "stop": "node deploy/manage.mjs stop",
+    "status": "node deploy/manage.mjs status"
+  }
+}

@@ -1,0 +1,3 @@
+@echo off
+cd /d "D:\uSafe Arch\server-model-bridge"
+powershell -NoExit -Command ".\start-tunnel.ps1; Write-Host ''; Write-Host 'uSafe Bridge running at http://127.0.0.1:18881/v1'; Write-Host ''; Write-Host 'Available models:'; Write-Host '  - mistral.mistral-large-3-675b-instruct (Claude-class)'; Write-Host '  - mistral.devstral-2-123b (coding)'; Write-Host '  - qwen.qwen3-coder-next (coding)'; Write-Host '  - qwen.qwen3-coder-480b-a35b-instruct (coding)'; Write-Host '  - google.gemma-4-31b (general)'; Write-Host '  - (+ 6 more models)'; Write-Host ''; Write-Host 'Press Ctrl+C to stop the tunnel'; Write-Host ''"
