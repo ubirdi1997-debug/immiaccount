@@ -1,0 +1,26 @@
+server {
+    listen 80;
+    server_name vevo.usafe.in;
+
+    client_max_body_size 10M;
+
+    # Admin Management Dashboard
+    location /admin {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # VEVO Upstream Proxy & Injection Engine
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host online.immi.gov.au;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        
+        # Disable upstream compression for Cheerio HTML stream manipulation
+        proxy_set_header Accept-Encoding "";
+    }
+}

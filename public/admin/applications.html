@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMM Account - Visa Applications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Side Navigation -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="bg-white border-r border-gray-200 w-64 flex-shrink-0">
+            <div class="p-4">
+                <h1 class="text-xl font-semibold text-gray-800">IMM Account</h1>
+            </div>
+            
+            <nav class="p-4">
+                <a href="/admin" class="block py-2.5 px-4 rounded transition duration-200 text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <span>Dashboard</span>
+                    </div>
+                </a>
+                
+                <a href="/admin/applications" class="block py-2.5 px-4 rounded transition duration-200 bg-blue-50 text-blue-700">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        <span>Visa Applications</span>
+                    </div>
+                </a>
+                
+                <a href="/admin/audit-logs" class="block py-2.5 px-4 rounded transition duration-200 text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10H9m4-10a4 4 0 00-4 4h-4a4 4 0 00-4-4H5a4 4 0 004 4h4a4 4 0 004-4"/></svg>
+                        <span>Audit Logs</span>
+                    </div>
+                </a>
+                
+                <a href="/admin/users" class="block py-2.5 px-4 rounded transition duration-200 text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        <span>Admin Users</span>
+                    </div>
+                </a>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-800">Visa Applications</h1>
+                    <div class="flex space-x-4">
+                        <button id="addApplicationBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200">
+                            Add New Application
+                        </button>
+                        <button id="filterBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition duration-200">
+                            Filter
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-medium text-gray-800">All Applications</h2>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TRN</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passport No</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Example row, content needs to be replaced with actual data -->
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">TRN-2026-K000001</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">ABC12345</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Sarah Smith</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">In Progress</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-green-600 hover:text-green-900 mr-2">View</button>
+                                        <button class="text-gray-600 hover:text-gray-900 mr-2">Edit</button>
+                                        <button class="text-red-600 hover:text-red-900">Delete</button>
+                                    </td>
+                                </tr>
+                                <!-- Add more rows as needed -->
+                                
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">TRN-2026-K000002</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">XYZ78912</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Robert Johnson</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-green-600 hover:text-green-900 mr-2">View</button>
+                                        <button class="text-gray-600 hover:text-gray-900 mr-2">Edit</button>
+                                        <button class="text-red-600 hover:text-red-900">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding a New Application -->
+    <div id="addApplicationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-medium text-gray-800">Add New Visa Application</h2>
+                <button type="button" id="cancelAddBtn" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <form class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="referenceNumber" class="block text-sm font-medium text-gray-700">Reference Number (Auto Generate)</label>
+                        <div class="mt-1 flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">auto_</span>
+                            <input type="text" id="referenceNumber" name="referenceNumber" class="flex-1 focus:ring-blue-500 focus:border-blue-500 block w-full rounded-none rounded-r-md border border-gray-300 p-2" disabled>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="trn" class="block text-sm font-medium text-gray-700">TRN</label>
+                        <div class="mt-1 flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">TRN-2026-</span>
+                            <input type="text" id="trn" name="trn" class="flex-1 focus:ring-blue-500 focus:border-blue-500 block w-full rounded-none rounded-r-md border border-gray-300 p-2" maxlength="6" oninput="this.value = this.value.substring(0, 6)">
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="passportNumber" class="block text-sm font-medium text-gray-700">Passport Number</label>
+                    <input type="text" id="passportNumber" name="passportNumber" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input type="text" id="firstName" name="firstName" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="nationality" class="block text-sm font-medium text-gray-700">Nationality</label>
+                    <select id="nationality" name="nationality" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="AUS">Australia</option>
+                        <option value="USA">United States</option>
+                        <option value="UK">United Kingdom</option>
+                        <option value="CHN">China</option>
+                        <option value="IN">India</option>
+                        <option value="JPN">Japan</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="visaType" class="block text-sm font-medium text-gray-700">Visa Type</label>
+                    <select id="visaType" name="visaType" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="Student">Student Visa</option>
+                        <option value="Work">Work Visa</option>
+                        <option value="Tourist">Tourist Visa</option>
+                        <option value="Family">Family Visa</option>
+                        <option value="Business">Business Visa</option>
+                        <option value="Residence">Permanent Residence</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700">Application Status</label>
+                    <select id="status" name="status" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Submitted">Submitted</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="visaDetails" class="block text-sm font-medium text-gray-700">Visa Details (JSON)</label>
+                    <textarea id="visaDetails" name="visaDetails" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">{
+        "visaSubclassType": "subclass_500",
+        "reasons": [
+            "Study in Australia at a registered education institution",
+            "Financial requirements met"
+        ],
+        "duration": "2 years",
+        "conditions": [
+            "8549",
+            "8664",
+            "8608"
+        ]
+    }</textarea>
+                    <p class="text-xs text-gray-500 mt-1">Optional: Add any specifics about the visa application.</p>
+                </div>
+                
+                <div class="flex justify-end mt-6">
+                    <button type="button" id="cancelAddBtn" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Cancel</button>
+                    <button type="button" id="saveApplicationBtn" class="ml-3 px-4 py-2 bg-blue-600 border border-transparent rounded-md text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Save Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts to enhance modal functionality -->
+    <script>
+        // Get DOM elements
+        const addApplicationBtn = document.getElementById('addApplicationBtn');
+        const addApplicationModal = document.getElementById('addApplicationModal');
+        const saveApplicationBtn = document.getElementById('saveApplicationBtn');
+        const cancelAddBtn = document.getElementById('cancelAddBtn');
+        
+        // Generate random TRN
+        const generateTRN = () => {
+            const timestamp = Date.now().toString(36).substring(0, 4);
+            const randomPart = Math.floor(Math.random() * 900000) + 100000;
+            return `TRN-2026-${timestamp}${randomPart.toString().substring(0, 3)}`;
+        };
+        
+        // Generate random Reference Number
+        const generateReferenceNumber = () => {
+            const yearShort = (new Date().getFullYear()).toString().substring(2, 4);
+            const seqNumber = Math.floor(Math.random() * 900) + 100;
+            return `REF-${yearShort}-${seqNumber}${Math.floor(Math.random() * 9).toString()}${Math.floor(Math.random() * 9).toString()}`;
+        };
+        
+        // Auto-generate values
+        document.getElementById('trn').addEventListener('blur', () => {
+            if (document.getElementById('trn').value.trim() === '') {
+                document.getElementById('trn').value = generateTRN();
+            }
+        });
+
+        // Add event listeners
+        addApplicationBtn.addEventListener('click', () => {
+            addApplicationModal.classList.remove('hidden');
+            // Auto-generate reference number
+            document.getElementById('referenceNumber').value = generateReferenceNumber();
+        });
+        
+        cancelAddBtn.addEventListener('click', () => {
+            addApplicationModal.classList.add('hidden');
+        });
+        
+        saveApplicationBtn.addEventListener('click', () => {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/admin/api/applications';
+            
+            // Add form fields
+            const trn = document.getElementById('trn').value;
+            const referenceNumber = document.getElementById('referenceNumber').value;
+            const passportNumber = document.getElementById('passportNumber').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const nationality = document.getElementById('nationality').value;
+            const visaType = document.getElementById('visaType').value;
+            const status = document.getElementById('status').value;
+            const visaDetails = document.getElementById('visaDetails').value;
+            
+            // Append hidden fields
+            form.innerHTML = `
+                <input type="hidden" name="referenceNumber" value="${referenceNumber}">
+                <input type="hidden" name="trn" value="${trn}">
+                <input type="hidden" name="passportNumber" value="${passportNumber}">
+                <input type="hidden" name="firstName" value="${firstName}">
+                <input type="hidden" name="lastName" value="${lastName}">
+                <input type="hidden" name="nationality" value="${nationality}">
+                <input type="hidden" name="visaType" value="${visaType}">
+                <input type="hidden" name="status" value="${status}">
+                <input type="hidden" name="visaDetails" value="${visaDetails}">
+            `;
+            
+            // Append the form to the body and submit
+            document.body.appendChild(form);
+            form.submit();
+            
+            // Reset form and close model after a short delay
+            setTimeout(() => {
+                addApplicationModal.classList.add('hidden');
+                alert('Application saved successfully!');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
