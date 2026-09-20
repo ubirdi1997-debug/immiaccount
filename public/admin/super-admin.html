@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard - IMM Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .status-locked { background-color: #fee2e2; color: #991b1b; }
+        .status-unlocked { background-color: #dcfce7; color: #166534; }
+        .status-pending { background-color: #fef3c7; color: #92400e; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Side Navigation -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="bg-gray-900 text-white w-64 flex-shrink-0">
+            <div class="p-6 border-b border-gray-800">
+                <h1 class="text-xl font-bold flex items-center">
+                    <i class="fas fa-shield-alt mr-2 text-blue-400"></i>
+                    Super Admin
+                </h1>
+            </div>
+            
+            <nav class="p-4">
+                <a href="/admin" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                    <i class="fas fa-home w-6"></i> Main Dashboard
+                </a>
+                
+                <a href="/admin/super-admin" class="block py-3 px-4 rounded-lg transition duration-200 bg-blue-600 text-white mb-1">
+                    <i class="fas fa-user-shield w-6"></i> Super Admin Panel
+                </a>
+                
+                <a href="/admin/applications" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                    <i class="fas fa-passport w-6"></i> Visa Applications
+                </a>
+                
+                <a href="/admin/audit-logs" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                    <i class="fas fa-history w-6"></i> Audit Logs
+                </a>
+                
+                <div class="mt-8 border-t border-gray-800 pt-4">
+                    <p class="px-4 text-xs text-gray-500 uppercase font-semibold mb-2">System</p>
+                    <a href="/admin/users" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                        <i class="fas fa-users-cog w-6"></i> Manage Admins
+                    </a>
+                    <a href="/admin/security-logs" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                        <i class="fas fa-lock w-6"></i> Security Logs
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Super Admin Dashboard</h1>
+                        <p class="text-gray-600 mt-1">System administration and security management</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-white px-4 py-2 rounded-lg shadow-sm flex items-center">
+                            <i class="fas fa-user-circle text-gray-400 mr-2 text-xl"></i>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800" id="currentAdmin">Loading...</p>
+                                <p class="text-xs text-green-600">Super Admin</p>
+                            </div>
+                        </div>
+                        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- System Overview Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Total Admins</p>
+                                <p class="text-2xl font-bold text-gray-800" id="totalAdmins">-</p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-users text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Active Sessions</p>
+                                <p class="text-2xl font-bold text-gray-800" id="activeSessions">-</p>
+                            </div>
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-desktop text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Locked Accounts</p>
+                                <p class="text-2xl font-bold text-gray-800" id="lockedAccounts">-</p>
+                            </div>
+                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-lock text-yellow-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-500">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Failed Logins (24h)</p>
+                                <p class="text-2xl font-bold text-gray-800" id="failedLogins">-</p>
+                            </div>
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Management Section -->
+                <div class="bg-white rounded-lg shadow-sm mb-8">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fas fa-users-cog text-blue-600 mr-3 text-xl"></i>
+                                <h2 class="text-xl font-semibold text-gray-800">Admin Management</h2>
+                            </div>
+                            <button onclick="showCreateAdminModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                                <i class="fas fa-plus mr-2"></i> Create New Admin
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Admin</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Machine Lock Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Last Login</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">IP Address</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminTableBody" class="divide-y divide-gray-200">
+                                <!-- Admin rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Security Logs Section -->
+                <div class="bg-white rounded-lg shadow-sm mb-8">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex items-center">
+                            <i class="fas fa-shield-alt text-red-600 mr-3 text-xl"></i>
+                            <h2 class="text-xl font-semibold text-gray-800">Recent Security Events</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Time</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Event</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Admin</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">IP Address</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="securityLogsBody" class="divide-y divide-gray-200">
+                                <!-- Security logs will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Session Management Section -->
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fas fa-desktop text-green-600 mr-3 text-xl"></i>
+                                <h2 class="text-xl font-semibold text-gray-800">Active Sessions</h2>
+                            </div>
+                            <button onclick="terminateAllSessions()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                                <i class="fas fa-power-off mr-2"></i> Terminate All Sessions
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Admin</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Machine Token</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">IP Address</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Started</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sessionsTableBody" class="divide-y divide-gray-200">
+                                <!-- Sessions will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Reset Machine Lock Modal -->
+    <div id="resetLockModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+            <div class="flex items-center mb-4">
+                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
+                    <i class="fas fa-unlock-alt text-yellow-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800">Reset Machine Lock</h3>
+                    <p class="text-sm text-gray-600">Admin: <span id="resetAdminName"></span></p>
+                </div>
+            </div>
+            
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                <p class="text-sm text-yellow-800">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    This will allow the admin to log in from a new machine/browser. The current machine lock will be removed.
+                </p>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Reset</label>
+                <textarea id="resetReason" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Enter reason for resetting machine lock..."></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeResetModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200">
+                    Cancel
+                </button>
+                <button onclick="confirmResetLock()" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition duration-200">
+                    <i class="fas fa-unlock mr-2"></i> Reset Lock
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Create Admin Modal -->
+    <div id="createAdminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Create New Admin</h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="newAdminUsername" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter username">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="newAdminPassword" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter password">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                    <select id="newAdminRole" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="false">Regular Admin</option>
+                        <option value="true">Super Admin</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button onclick="closeCreateAdminModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200">
+                    Cancel
+                </button>
+                <button onclick="createAdmin()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                    <i class="fas fa-plus mr-2"></i> Create Admin
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentResetAdminId = null;
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/admin/api/super-admin/dashboard');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('totalAdmins').textContent = data.stats.totalAdmins;
+                    document.getElementById('activeSessions').textContent = data.stats.activeSessions;
+                    document.getElementById('lockedAccounts').textContent = data.stats.lockedAccounts;
+                    document.getElementById('failedLogins').textContent = data.stats.failedLogins;
+                    document.getElementById('currentAdmin').textContent = data.currentAdmin.username;
+                    
+                    renderAdminTable(data.admins);
+                    renderSecurityLogs(data.securityLogs);
+                    renderSessionsTable(data.sessions);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+        
+        function renderAdminTable(admins) {
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = admins.map(admin => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                                <i class="fas fa-user text-gray-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">${admin.username}</p>
+                                ${admin.is_super_admin ? '<span class="text-xs text-purple-600 font-semibold">Super Admin</span>' : '<span class="text-xs text-gray-500">Admin</span>'}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        ${admin.locked_at ? `
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full status-locked">
+                                <i class="fas fa-lock mr-1"></i> Locked
+                            </span>
+                            <p class="text-xs text-gray-500 mt-1">${admin.machine_token || 'Unknown machine'}</p>
+                        ` : `
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full status-unlocked">
+                                <i class="fas fa-unlock mr-1"></i> Unlocked
+                            </span>
+                        `}
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm text-gray-900">${admin.last_login_at ? new Date(admin.last_login_at).toLocaleString() : 'Never'}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm text-gray-900">${admin.last_login_ip || 'N/A'}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex space-x-2">
+                            ${admin.locked_at ? `
+                                <button onclick="showResetModal(${admin.id}, '${admin.username}')" class="text-yellow-600 hover:text-yellow-900" title="Reset Machine Lock">
+                                    <i class="fas fa-unlock-alt"></i>
+                                </button>
+                            ` : ''}
+                            <button onclick="resetPassword(${admin.id})" class="text-blue-600 hover:text-blue-900" title="Reset Password">
+                                <i class="fas fa-key"></i>
+                            </button>
+                            <button onclick="toggleAdminStatus(${admin.id}, ${admin.is_active})" class="${admin.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'}" title="${admin.is_active ? 'Deactivate' : 'Activate'}">
+                                <i class="fas ${admin.is_active ? 'fa-ban' : 'fa-check-circle'}"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderSecurityLogs(logs) {
+            const tbody = document.getElementById('securityLogsBody');
+            tbody.innerHTML = logs.map(log => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">${new Date(log.attempted_at).toLocaleString()}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${log.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${log.success ? '<i class="fas fa-check mr-1"></i> Success' : '<i class="fas fa-times mr-1"></i> Failed'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${log.attempted_username}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${log.ip_address}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${log.reason || 'N/A'}</td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderSessionsTable(sessions) {
+            const tbody = document.getElementById('sessionsTableBody');
+            tbody.innerHTML = sessions.map(session => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">${session.username}</td>
+                    <td class="px-6 py-4">
+                        <code class="text-xs bg-gray-100 px-2 py-1 rounded">${session.machine_token.substring(0, 16)}...</code>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${session.ip_address}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${new Date(session.created_at).toLocaleString()}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="terminateSession(${session.id})" class="text-red-600 hover:text-red-900" title="Terminate Session">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Modal functions
+        function showResetModal(adminId, adminName) {
+            currentResetAdminId = adminId;
+            document.getElementById('resetAdminName').textContent = adminName;
+            document.getElementById('resetLockModal').classList.remove('hidden');
+        }
+        
+        function closeResetModal() {
+            document.getElementById('resetLockModal').classList.add('hidden');
+            document.getElementById('resetReason').value = '';
+            currentResetAdminId = null;
+        }
+        
+        async function confirmResetLock() {
+            const reason = document.getElementById('resetReason').value;
+            if (!reason) {
+                alert('Please provide a reason for resetting the machine lock.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/api/super-admin/reset-machine-lock', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ adminId: currentResetAdminId, reason })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Machine lock reset successfully.');
+                    closeResetModal();
+                    loadDashboardData();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error resetting machine lock:', error);
+                alert('An error occurred while resetting the machine lock.');
+            }
+        }
+        
+        function showCreateAdminModal() {
+            document.getElementById('createAdminModal').classList.remove('hidden');
+        }
+        
+        function closeCreateAdminModal() {
+            document.getElementById('createAdminModal').classList.add('hidden');
+            document.getElementById('newAdminUsername').value = '';
+            document.getElementById('newAdminPassword').value = '';
+            document.getElementById('newAdminRole').value = 'false';
+        }
+        
+        async function createAdmin() {
+            const username = document.getElementById('newAdminUsername').value;
+            const password = document.getElementById('newAdminPassword').value;
+            const isSuperAdmin = document.getElementById('newAdminRole').value === 'true';
+            
+            if (!username || !password) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/api/super-admin/create-admin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, isSuperAdmin })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Admin created successfully.');
+                    closeCreateAdminModal();
+                    loadDashboardData();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error creating admin:', error);
+                alert('An error occurred while creating the admin.');
+            }
+        }
+        
+        async function resetPassword(adminId) {
+            const newPassword = prompt('Enter new password:');
+            if (!newPassword) return;
+            
+            try {
+                const response = await fetch('/admin/api/super-admin/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ adminId, newPassword })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Password reset successfully.');
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error resetting password:', error);
+                alert('An error occurred while resetting the password.');
+            }
+        }
+        
+        async function toggleAdminStatus(adminId, currentStatus) {
+            const action = currentStatus ? 'deactivate' : 'activate';
+            if (!confirm(`Are you sure you want to ${action} this admin?`)) return;
+            
+            try {
+                const response = await fetch('/admin/api/super-admin/toggle-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ adminId, isActive: !currentStatus })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    loadDashboardData();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error toggling admin status:', error);
+                alert('An error occurred while updating admin status.');
+            }
+        }
+        
+        async function terminateSession(sessionId) {
+            if (!confirm('Are you sure you want to terminate this session?')) return;
+            
+            try {
+                const response = await fetch('/admin/api/super-admin/terminate-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    loadDashboardData();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error terminating session:', error);
+                alert('An error occurred while terminating the session.');
+            }
+        }
+        
+        async function terminateAllSessions() {
+            if (!confirm('Are you sure you want to terminate ALL sessions? This will log out all admins.')) return;
+            
+            try {
+                const response = await fetch('/admin/api/super-admin/terminate-all-sessions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('All sessions terminated successfully.');
+                    loadDashboardData();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error terminating all sessions:', error);
+                alert('An error occurred while terminating sessions.');
+            }
+        }
+        
+        async function logout() {
+            try {
+                await fetch('/logout', { method: 'POST' });
+                window.location.href = '/login';
+            } catch (error) {
+                console.error('Error logging out:', error);
+            }
+        }
+        
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+</html>

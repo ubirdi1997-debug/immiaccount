@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>New Visa Application - Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="visa-flow.css">
+  <script src="admin-visa-application.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Application<span>tracker</span></a>
+    <div id="session" hidden>
+      <span id="identity"></span>
+      <button id="logout" class="quiet">Sign out</button>
+    </div>
+  </header>
+
+  <main class="visa-wizard">
+    <!-- Login Required Message -->
+    <section id="login-required" class="card" style="text-align: center; padding: 60px;">
+      <div class="eyebrow">ADMINISTRATOR ACCESS REQUIRED</div>
+      <h1>Sign In Required</h1>
+      <p class="muted">Please sign in with an administrator account to create new visa applications.</p>
+      <a href="/admin" class="primary" style="margin-top: 20px; display: inline-block;">Go to Sign In</a>
+    </section>
+
+    <!-- Admin Only Content -->
+    <div id="admin-content" hidden>
+      <div class="wizard-header card">
+        <div class="eyebrow">ADMIN TOOL</div>
+        <h1>Create New Visa Application</h1>
+        <p class="muted">Step-by-step wizard to create a user account with visa details. Creates login credentials for applicants to track their status.</p>
+      </div>
+
+      <!-- Progress Steps -->
+      <div class="steps-progress card">
+        <div class="step-indicator active" data-step="1">
+          <div class="step-dot">1</div>
+          <span class="step-label">Account</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-indicator" data-step="2">
+          <div class="step-dot">2</div>
+          <span class="step-label">Personal</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-indicator" data-step="3">
+          <div class="step-dot">3</div>
+          <span class="step-label">Passport</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-indicator" data-step="4">
+          <div class="step-dot">4</div>
+          <span class="step-label">Visa Info</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-indicator" data-step="5">
+          <div class="step-dot">5</div>
+          <span class="step-label">Review</span>
+        </div>
+      </div>
+
+      <p id="message" role="status" aria-live="polite" style="text-align: center;"></p>
+
+      <!-- Step 1: Account Access -->
+      <section class="wizard-step card" data-step="1">
+        <h2>Account Access</h2>
+        <p class="muted">Create login credentials for the applicant to access their status.</p>
+        
+        <div class="form-grid">
+          <label>Login ID <small>Required. 3-64 letters, numbers, dots, underscores or hyphens.</small>
+            <input type="text" id="login" required minlength="3" maxlength="64" pattern="[a-zA-Z0-9._-]+" autocomplete="off">
+          </label>
+          <label>Password <small>At least 12 characters</small>
+            <input type="password" id="password" required minlength="12" maxlength="128">
+          </label>
+        </div>
+        
+        <div class="step-actions">
+          <span></span>
+          <button class="primary" data-next>Next: Personal Details →</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Personal Information -->
+      <section class="wizard-step card" data-step="2" hidden>
+        <h2>Personal Information</h2>
+        <p class="muted">Enter the applicant's personal details.</p>
+        
+        <div class="form-grid">
+          <label>Full name <small>Required</small>
+            <input type="text" id="name" required maxlength="200">
+          </label>
+          <label>Date of birth <small>Required</small>
+            <input type="date" id="dob" required max="">
+          </label>
+        </div>
+        
+        <div class="step-actions">
+          <button class="quiet" data-prev>← Back</button>
+          <button class="primary" data-next>Next: Passport →</button>
+        </div>
+      </section>
+
+      <!-- Step 3: Passport Details -->
+      <section class="wizard-step card" data-step="3" hidden>
+        <h2>Passport Details</h2>
+        <p class="muted">Enter passport and TRN information.</p>
+        
+        <div class="form-grid">
+          <label>Passport/Travel document number <small>Required</small>
+            <input type="text" id="passport" required maxlength="200">
+          </label>
+          <label>Passport country <small>Required</small>
+            <input type="text" id="country" required maxlength="200" placeholder="e.g., Australia">
+          </label>
+          <label>Transaction Reference Number (TRN) <small>Required</small>
+            <input type="text" id="trn" required maxlength="200" placeholder="e.g., ABC123456">
+          </label>
+          <label>Application ID <small>Optional</small>
+            <input type="text" id="applicationId" maxlength="200">
+          </label>
+        </div>
+        
+        <div class="vevo-lookup">
+          <button type="button" class="quiet" id="vevoLookup">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            Lookup in VEVO
+          </button>
+          <p class="muted small">Opens VEVO proxy in new tab. Use userscript to autofill this form.</p>
+        </div>
+        
+        <div class="step-actions">
+          <button class="quiet" data-prev>← Back</button>
+          <button class="primary" data-next>Next: Visa Details →</button>
+        </div>
+      </section>
+
+      <!-- Step 4: Visa Details -->
+      <section class="wizard-step card" data-step="4" hidden>
+        <h2>Visa Details</h2>
+        <p class="muted">Optional details from the applicant's documents. Enter only information available in those documents.</p>
+        
+        <div class="form-grid">
+          <label>Visa / Subclass
+            <input type="text" id="visa" maxlength="200" placeholder="e.g., 600 - Visitor">
+          </label>
+          <label>Date of grant
+            <input type="date" id="grantDate">
+          </label>
+          <label>Visa grant number
+            <input type="text" id="grantNumber" maxlength="200">
+          </label>
+          <label>Must not arrive after
+            <input type="date" id="arrivalDeadline">
+          </label>
+          <label>Length of stay
+            <input type="text" id="lengthOfStay" maxlength="200" placeholder="e.g., 3 months">
+          </label>
+          <label>Travel conditions
+            <input type="text" id="travel" maxlength="200" placeholder="e.g., Multiple entries">
+          </label>
+        </div>
+        
+        <label class="full-width">Visa conditions
+          <textarea id="conditions" rows="3" maxlength="2000" placeholder="e.g., 8101 - No work&#10;8201 - Maximum 3 months study"></textarea>
+        </label>
+        
+        <label class="full-width">Message to applicant (visible in their account)
+          <textarea id="note" rows="3" maxlength="2000"></textarea>
+        </label>
+        
+        <div class="step-actions">
+          <button class="quiet" data-prev>← Back</button>
+          <button class="primary" data-next>Review Application →</button>
+        </div>
+      </section>
+
+      <!-- Step 5: Review & Submit -->
+      <section class="wizard-step card" data-step="5" hidden>
+        <h2>Review Application</h2>
+        <p class="muted">Review all details before creating the account.</p>
+        
+        <div class="review-sections" id="reviewContent">
+          <!-- Populated by JS -->
+        </div>
+        
+        <div class="review-actions">
+          <label class="checkbox-label">
+            <input type="checkbox" id="confirm" required>
+            I confirm these details are correct and I have verified the applicant's identity.
+          </label>
+        </div>
+        
+        <div class="step-actions">
+          <button class="quiet" data-prev>← Back</button>
+          <button class="primary" id="submitBtn" disabled>Create Account</button>
+        </div>
+      </section>
+
+      <!-- Success State -->
+      <section class="wizard-step card success-card" data-step="success" hidden>
+        <div class="success-icon">✓</div>
+        <h2>Account Created Successfully</h2>
+        <p class="muted">The visa application has been created and the user can now sign in to track their status.</p>
+        
+        <div class="success-details">
+          <div class="detail-row">
+            <span>Login ID:</span>
+            <code id="successLogin">-</code>
+          </div>
+          <div class="detail-row">
+            <span>Password:</span>
+            <code id="successPassword">-</code>
+          </div>
+          <div class="detail-row">
+            <span>Status:</span>
+            <span class="status-badge submitted">In Progress</span>
+          </div>
+        </div>
+        
+        <div class="step-actions center">
+          <a href="/" class="primary">Go to Dashboard</a>
+          <button class="quiet" id="createAnother">+ Create Another</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>Connected to tracker API · <a href="/vevo-result.html" target="_blank">Preview VEVO Result Page</a> · <a href="/status.html" target="_blank">Preview Status Page</a></p>
+  </footer>
+
+  <!-- Autosave indicator -->
+  <div class="autosave-indicator" id="autosave" hidden>
+    <span class="save-icon">💾</span>
+    <span>Draft saved</span>
+  </div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Logs - IMM Account Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="bg-gray-900 text-white w-64 flex-shrink-0">
+            <div class="p-6 border-b border-gray-800">
+                <h1 class="text-xl font-bold flex items-center">
+                    <i class="fas fa-shield-alt mr-2 text-blue-400"></i>
+                    Admin Portal
+                </h1>
+            </div>
+            
+            <nav class="p-4">
+                <a href="/admin" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                    <i class="fas fa-home w-6"></i> Dashboard
+                </a>
+                <a href="/admin/applications" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                    <i class="fas fa-passport w-6"></i> Applications
+                </a>
+                <a href="/admin/audit-logs" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                    <i class="fas fa-history w-6"></i> Audit Logs
+                </a>
+                <a href="/admin/security-logs" class="block py-3 px-4 rounded-lg transition duration-200 bg-blue-600 text-white mb-1">
+                    <i class="fas fa-lock w-6"></i> Security Logs
+                </a>
+                <a href="/admin/super-admin" class="block py-3 px-4 rounded-lg transition duration-200 hover:bg-gray-800 text-gray-300 mb-1">
+                    <i class="fas fa-user-shield w-6"></i> Super Admin
+                </a>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Security Logs</h1>
+                        <p class="text-gray-600 mt-1">Login attempts and security events</p>
+                    </div>
+                    <button onclick="loadLogs()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-refresh mr-2"></i> Refresh
+                    </button>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Failed Logins (24h)</p>
+                                <p class="text-2xl font-bold text-gray-800" id="failedCount">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Successful Logins (24h)</p>
+                                <p class="text-2xl font-bold text-gray-800" id="successCount">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-lock text-yellow-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Machine Lock Events (24h)</p>
+                                <p class="text-2xl font-bold text-gray-800" id="lockCount">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Logs Table -->
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Time</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Username</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">IP Address</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Browser/User Agent</th>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logsTableBody" class="divide-y divide-gray-200">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                        <i class="fas fa-spinner fa-spin mr-2"></i> Loading logs...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function loadLogs() {
+            try {
+                const response = await fetch('/admin/api/super-admin/dashboard');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('failedCount').textContent = data.stats.failedLogins;
+                    
+                    // Calculate success count from logs
+                    const allLogs = data.securityLogs;
+                    const successCount = allLogs.filter(log => log.success).length;
+                    document.getElementById('successCount').textContent = successCount;
+                    
+                    const lockCount = allLogs.filter(log => log.reason && log.reason.includes('machine')).length;
+                    document.getElementById('lockCount').textContent = lockCount;
+                    
+                    renderLogsTable(allLogs);
+                }
+            } catch (error) {
+                console.error('Error loading logs:', error);
+                document.getElementById('logsTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-red-500">
+                            <i class="fas fa-exclamation-triangle mr-2"></i> Error loading logs
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        function renderLogsTable(logs) {
+            const tbody = document.getElementById('logsTableBody');
+            
+            if (logs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <i class="fas fa-inbox mr-2"></i> No security logs found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = logs.map(log => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${new Date(log.attempted_at).toLocaleString()}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        ${log.attempted_username}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        ${log.success ? 
+                            `<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                <i class="fas fa-check mr-1"></i> Success
+                             </span>` :
+                            `<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                <i class="fas fa-times mr-1"></i> Failed
+                             </span>`
+                        }
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
+                        ${log.ip_address || 'N/A'}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate" title="${log.user_agent || ''}">
+                        ${log.user_agent ? log.user_agent.substring(0, 50) + '...' : 'N/A'}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">
+                        ${log.reason || 'N/A'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Load logs on page load
+        document.addEventListener('DOMContentLoaded', loadLogs);
+    </script>
+</body>
+</html>

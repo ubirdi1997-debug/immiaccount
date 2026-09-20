@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Visa Entitlement Verification Online (VEVO)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="vevo-result.css">
+</head>
+<body>
+  <!-- VEVO Header -->
+  <header class="vevo-header">
+    <div class="vevo-header-inner">
+      <div class="vevo-logo">
+        <div class="coat-of-arms">
+          <svg viewBox="0 0 60 60" width="50" height="50">
+            <circle cx="30" cy="30" r="28" fill="#1a365d" stroke="#d4af37" stroke-width="2"/>
+            <text x="30" y="38" text-anchor="middle" fill="#d4af37" font-size="24" font-weight="bold">★</text>
+          </svg>
+        </div>
+        <div class="vevo-title">
+          <h1>Australian Government</h1>
+          <h2>Visa Entitlement Verification Online (VEVO)</h2>
+        </div>
+      </div>
+      <div class="vevo-actions">
+        <button class="vevo-btn secondary" onclick="window.print()">Print</button>
+        <button class="vevo-btn primary" onclick="window.location.href='/'">Back to Home</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="vevo-container">
+    <!-- Result Header -->
+    <div class="result-header">
+      <div class="result-status approved">
+        <div class="status-icon">✓</div>
+        <div class="status-text">
+          <h2>Visa Granted</h2>
+          <p>Your visa has been approved and is currently valid</p>
+        </div>
+      </div>
+      <div class="result-timestamp">
+        <div class="timestamp-item">
+          <span class="label">Enquiry Date:</span>
+          <span class="value" id="enquiryDate">20 September 2026</span>
+        </div>
+        <div class="timestamp-item">
+          <span class="label">Reference:</span>
+          <span class="value" id="refNumber">VEVO-2024-XXXXXXXX</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Details -->
+    <section class="vevo-section">
+      <div class="section-header">
+        <h3>Personal Details</h3>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">Family Name</span>
+            <span class="detail-value" id="familyName">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Given Names</span>
+            <span class="detail-value" id="givenNames">-</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">Date of Birth</span>
+            <span class="detail-value" id="dateOfBirth">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Passport Number</span>
+            <span class="detail-value" id="passportNumber">-</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">Country of Passport</span>
+            <span class="detail-value" id="passportCountry">-</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visa Details -->
+    <section class="vevo-section">
+      <div class="section-header">
+        <h3>Visa Details</h3>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">Visa Class</span>
+            <span class="detail-value" id="visaClass">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Visa Subclass</span>
+            <span class="detail-value" id="visaSubclass">-</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">Grant Date</span>
+            <span class="detail-value" id="grantDate">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Grant Number</span>
+            <span class="detail-value" id="grantNumber">-</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">Length of Stay</span>
+            <span class="detail-value" id="lengthOfStay">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Must Not Arrive After</span>
+            <span class="detail-value highlight" id="arrivalDeadline">-</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item full-width">
+            <span class="detail-label">Travel Facility</span>
+            <span class="detail-value" id="travelFacility">-</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visa Conditions -->
+    <section class="vevo-section">
+      <div class="section-header">
+        <h3>Visa Conditions</h3>
+      </div>
+      <div class="conditions-list" id="conditionsList">
+        <div class="condition-item">
+          <span class="condition-code">8101</span>
+          <span class="condition-text">No work</span>
+        </div>
+        <div class="condition-item">
+          <span class="condition-code">8201</span>
+          <span class="condition-text">Maximum three months study</span>
+        </div>
+        <div class="condition-item">
+          <span class="condition-code">8503</span>
+          <span class="condition-text">No further stay</span>
+        </div>
+      </div>
+      <p class="conditions-note">Breaching visa conditions may lead to visa cancellation.</p>
+    </section>
+
+    <!-- Important Information -->
+    <section class="vevo-section important-info">
+      <div class="section-header">
+        <h3>Important Information</h3>
+      </div>
+      <div class="info-box">
+        <h4>Important Notice</h4>
+        <ul>
+          <li>This is an extract of visa information held by the Department of Home Affairs.</li>
+          <li>This extract is valid as at the date and time shown above.</li>
+          <li>Visa conditions apply to all visas and may be subject to change.</li>
+          <li>For the most up-to-date information, visit <a href="https://online.immi.gov.au/evo/firstParty?actionType=query" target="_blank"> official VEVO website</a>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <footer class="vevo-footer">
+      <p class="disclaimer">
+        <strong>Disclaimer:</strong> This is a demonstration result page. The information shown here is for testing purposes only and is not an official Australian Government record. For official visa verification, please visit the Department of Home Affairs website.
+      </p>
+      <p class="copyright">
+        © 2024 Australian Government Department of Home Affairs
+      </p>
+    </footer>
+  </main>
+
+  <script>
+    // Populate with URL parameters or sample data
+    const params = new URLSearchParams(window.location.search);
+    
+    const data = {
+      familyName: params.get('familyName') || 'SMITH',
+      givenNames: params.get('givenNames') || 'JOHN JAMES',
+      dateOfBirth: params.get('dob') || '15 January 1990',
+      passportNumber: params.get('passport') || 'P12345678',
+      passportCountry: params.get('country') || 'UNITED STATES OF AMERICA',
+      visaClass: params.get('visaClass') || 'Visitor',
+      visaSubclass: params.get('subclass') || '600',
+      grantDate: params.get('grantDate') || '15 March 2024',
+      grantNumber: params.get('grantNumber') || '123456789',
+      lengthOfStay: params.get('stay') || '3 months',
+      arrivalDeadline: params.get('arrivalDeadline') || '15 March 2025',
+      travelFacility: params.get('travel') || 'Multiple'
+    };
+    
+    // Update DOM
+    Object.entries(data).forEach(([key, value]) => {
+      const el = document.getElementById(key);
+      if (el) el.textContent = value;
+    });
+    
+    // Update ref number
+    const refEl = document.getElementById('refNumber');
+    if (refEl && params.get('ref')) {
+      refEl.textContent = params.get('ref');
+    }
+  </script>
+</body>
+</html>

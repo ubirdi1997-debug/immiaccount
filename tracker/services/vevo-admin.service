@@ -1,0 +1,17 @@
+[Unit]
+Description=VEVO Admin Dashboard Service
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/vevo/tracker
+ExecStart=/usr/bin/node admin-server.mjs
+Restart=always
+RestartSec=5
+Environment="PORT=3000"
+Environment="NODE_ENV=production"
+EnvironmentFile=/home/ubuntu/vevo/.env
+
+[Install]
+WantedBy=multi-user.target

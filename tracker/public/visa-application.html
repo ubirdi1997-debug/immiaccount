@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Visa Application - Step by Step</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="visa-flow.css">
+  <script src="visa-application.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Application<span>tracker</span></a>
+    <div class="step-indicator">
+      <div class="step-dot active" data-step="1">1</div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="2">2</div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="3">3</div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="4">4</div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="5">5</div>
+    </div>
+  </header>
+
+  <main class="visa-flow">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-text">
+        <span id="stepLabel">Personal Information</span>
+        <span class="step-counter">Step <span id="currentStep">1</span> of 5</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Personal Information -->
+    <section class="step-panel active" data-step="1">
+      <div class="card step-card">
+        <div class="eyebrow">Step 1</div>
+        <h1>Personal Information</h1>
+        <p class="muted">Enter your personal details exactly as they appear on your passport.</p>
+        
+        <div class="form-grid">
+          <label class="field-group">
+            <span class="field-label">Given Names *</span>
+            <input type="text" id="givenName" placeholder="As shown in passport" required>
+            <span class="field-hint">Enter all given names exactly as in passport</span>
+          </label>
+          
+          <label class="field-group">
+            <span class="field-label">Family Name *</span>
+            <input type="text" id="familyName" placeholder="Surname" required>
+          </label>
+          
+          <label class="field-group">
+            <span class="field-label">Date of Birth *</span>
+            <input type="date" id="dob" required>
+          </label>
+          
+          <label class="field-group">
+            <span class="field-label">Place of Birth</span>
+            <input type="text" id="pob" placeholder="City, Country">
+          </label>
+          
+          <label class="field-group full-width">
+            <span class="field-label">Country of Birth *</span>
+            <select id="cob" required>
+              <option value="">Select country</option>
+            </select>
+          </label>
+        </div>
+        
+        <div class="step-actions">
+          <button class="quiet" onclick="saveDraft()">Save Draft</button>
+          <button class="primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 2: Passport Details -->
+    <section class="step-panel" data-step="2">
+      <div class="card step-card">
+        <div class="eyebrow">Step 2</div>
+        <h1>Passport Details</h1>
+        <p class="muted">Enter your current passport information.</p>
+        
+        <div class="form-grid">
+          <label class="field-group full-width">
+            <span class="field-label">Passport Number *</span>
+            <input type="text" id="passportNumber" placeholder="e.g., P12345678" required>
+            <span class="field-hint">Enter the machine-readable passport number</span>
+          </label>
+          
+          <label class="field-group full-width">
+            <span class="field-label">Country of Passport *</span>
+            <select id="passportCountry" required>
+              <option value="">Select country</option>
+            </select>
+          </label>
+          
+          <label class="field-group">
+            <span class="field-label">Date of Issue *</span>
+            <input type="date" id="passportIssue" required>
+          </label>
+          
+          <label class="field-group">
+            <span class="field-label">Date of Expiry *</span>
+            <input type="date" id="passportExpiry" required>
+          </label>
+          
+          <label class="field-group">
+            <span class="field-label">Place of Issue</span>
+            <input type="text" id="passportPlace" placeholder="Issuing authority">
+          </label>
+          
+          <label class="field-group">
+            <span class="field-label">Authority</span>
+            <input type="text" id="passportAuthority" placeholder="Passport office">
+          </label>
+        </div>
+        
+        <div class="upload-section">
+          <div class="upload-box" onclick="document.getElementById('passportUpload').click()">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <p>Upload passport copy</p>
+            <span class="upload-hint">PDF or JPG, max 5MB</span>
+          </div>
+          <input type="file" id="passportUpload" hidden accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+        
+        <div class="step-actions">
+          <button class="quiet" onclick="prevStep()">← Back</button>
+          <button class="quiet" onclick="saveDraft()">Save Draft</button>
+          <button class="primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3: Contact Information -->
+    <section class="step-panel" data-step="3">
+      <div class="card step-card">
+        <div class="eyebrow">Step 3</div>
+        <h1>Contact Information</h1>
+        <p class="muted">How can we reach you about your application?</p>
+        
+        <div class="form-grid">
+          <label class="field-group full-width">
+            <span class="field-label">Email Address *</span>
+            <input type="email" id="email" placeholder="your@email.com" required>
+          </label>
+          
+          <label class="field-group full-width">
+            <span class="field-label">Phone Number *</span>
+            <div class="phone-input">
+              <select id="phoneCountry">
+                <option value="+61">🇦🇺 +61</option>
+                <option value="+91">🇮🇳 +91</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+1">🇺🇸 +1</option>
+              </select>
+              <input type="tel" id="phone" placeholder="Mobile number" required>
+            </div>
+          </label>
+          
+          <label class="field-group full-width">
+            <span class="field-label">Current Address *</span>
+            <textarea id="address" rows="3" placeholder="Street address, City, State/Province, Postal code, Country" required></textarea>
+          </label>
+        </div>
+        
+        <div class="step-actions">
+          <button class="quiet" onclick="prevStep()">← Back</button>
+          <button class="quiet" onclick="saveDraft()">Save Draft</button>
+          <button class="primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 4: Visa Details -->
+    <section class="step-panel" data-step="4">
+      <div class="card step-card">
+        <div class="eyebrow">Step 4</div>
+        <h1>Visa Details</h1>
+        <p class="muted">Select the visa you wish to apply for.</p>
+        
+        <div class="visa-types">
+          <div class="visa-card" data-visa="visitor">
+            <div class="visa-icon">🌏</div>
+            <h3>Visitor Visa</h3>
+            <p>Tourism or visiting family/friends</p>
+          </div>
+          <div class="visa-card" data-visa="student">
+            <div class="visa-icon">🎓</div>
+            <h3>Student Visa</h3>
+            <p>Study at an Australian institution</p>
+          </div>
+          <div class="visa-card" data-visa="work">
+            <div class="visa-icon">💼</div>
+            <h3>Work Visa</h3>
+            <p>Skilled work and employment</p>
+          </div>
+          <div class="visa-card" data-visa="family">
+            <div class="visa-icon">👨‍👩‍👧‍👦</div>
+            <h3>Family Visa</h3>
+            <p>Partner or family sponsorship</p>
+          </div>
+        </div>
+        
+        <div class="form-grid visa-details" hidden>
+          <label class="field-group full-width">
+            <span class="field-label">Visa Subclass *</span>
+            <select id="visaSubclass" required>
+              <option value="">Select visa subclass</option>
+              <option value="600">600 - Visitor</option>
+              <option value="500">500 - Student</option>
+              <option value="482">482 - Temporary Skill Shortage</option>
+              <option value="189">189 - Skilled Independent</option>
+              <option value="820">820 - Partner (Temporary)</option>
+            </select>
+          </label>
+          
+          <label class="field-group full-width">
+            <span class="field-label">Transaction Reference Number (TRN) *</span>
+            <input type="text" id="trn" placeholder="If you have an existing application" required>
+          </label>
+        </div>
+        
+        <div class="step-actions">
+          <button class="quiet" onclick="prevStep()">← Back</button>
+          <button class="quiet" onclick="saveDraft()">Save Draft</button>
+          <button class="primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 5: Review & Submit -->
+    <section class="step-panel" data-step="5">
+      <div class="card step-card">
+        <div class="eyebrow">Step 5</div>
+        <h1>Review Your Application</h1>
+        <p class="muted">Please review all information before submitting.</p>
+        
+        <div class="review-sections">
+          <div class="review-section">
+            <div class="review-header">
+              <h3>Personal Information</h3>
+              <button class="edit-btn" onclick="goToStep(1)">Edit</button>
+            </div>
+            <div class="review-content" id="reviewPersonal"></div>
+          </div>
+          
+          <div class="review-section">
+            <div class="review-header">
+              <h3>Passport Details</h3>
+              <button class="edit-btn" onclick="goToStep(2)">Edit</button>
+            </div>
+            <div class="review-content" id="reviewPassport"></div>
+          </div>
+          
+          <div class="review-section">
+            <div class="review-header">
+              <h3>Contact Information</h3>
+              <button class="edit-btn" onclick="goToStep(3)">Edit</button>
+            </div>
+            <div class="review-content" id="reviewContact"></div>
+          </div>
+          
+          <div class="review-section">
+            <div class="review-header">
+              <h3>Visa Details</h3>
+              <button class="edit-btn" onclick="goToStep(4)">Edit</button>
+            </div>
+            <div class="review-content" id="reviewVisa"></div>
+          </div>
+        </div>
+        
+        <div class="declaration">
+          <label class="checkbox-field">
+            <input type="checkbox" id="declaration" required>
+            <span>I declare that the information provided is true and correct to the best of my knowledge.</span>
+          </label>
+        </div>
+        
+        <div class="step-actions">
+          <button class="quiet" onclick="prevStep()">← Back</button>
+          <button class="quiet" onclick="saveDraft()">Save Draft</button>
+          <button class="primary submit-btn" onclick="submitApplication()" disabled>Submit Application</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Success Screen -->
+    <section class="step-panel success-panel" data-step="success">
+      <div class="card step-card success-card">
+        <div class="success-icon">✓</div>
+        <h1>Application Submitted!</h1>
+        <p class="muted">Your visa application has been received successfully.</p>
+        
+        <div class="application-reference">
+          <span class="ref-label">Application Reference</span>
+          <span class="ref-number" id="appRef">VEVO-2024-XXXXXX</span>
+          <span class="ref-hint">Save this reference number for your records</span>
+        </div>
+        
+        <div class="next-steps">
+          <h3>What happens next?</h3>
+          <ul>
+            <li>You will receive a confirmation email shortly</li>
+            <li>A case officer will review your application</li>
+            <li>You can check your status using your Application Reference</li>
+          </ul>
+        </div>
+        
+        <div class="step-actions centered">
+          <button class="primary" onclick="window.location.href='/status.html'">Check Status</button>
+          <button class="quiet" onclick="window.location.href='/'">Return Home</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Auto-save indicator -->
+  <div class="autosave-indicator" id="autosave">
+    <span class="autosave-dot"></span>
+    <span class="autosave-text">Auto-saved</span>
+    <span class="autosave-time" id="autosaveTime"></span>
+  </div>
+</body>
+</html>

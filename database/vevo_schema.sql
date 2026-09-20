@@ -1,12 +1,65 @@
 -- Complete VEVO Schema
 
--- Admin Users Table
+-- Admin Users Table with Browser Locking and Super Admin
 CREATE TABLE IF NOT EXISTS admins (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     salt TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    is_super_admin BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
+    -- Browser/Machine Locking Fields
+    browser_fingerprint TEXT DEFAULT NULL,
+    machine_token TEXT DEFAULT NULL,
+    locked_at DATETIME DEFAULT NULL,
+    last_login_ip TEXT DEFAULT NULL,
+    last_login_at DATETIME DEFAULT NULL,
+    last_user_agent TEXT DEFAULT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Admin Login Attempts Table (for tracking failed logins)
+CREATE TABLE IF NOT EXISTS admin_login_attempts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    admin_id INTEGER,
+    attempted_username TEXT,
+    ip_address TEXT NOT NULL,
+    user_agent TEXT,
+    browser_fingerprint TEXT,
+    success BOOLEAN DEFAULT FALSE,
+    reason TEXT,
+    attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(admin_id) REFERENCES admins(id)
+);
+
+-- Admin Session Tokens Table (for tracking active sessions)
+CREATE TABLE IF NOT EXISTS admin_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    admin_id INTEGER NOT NULL,
+    session_token TEXT NOT NULL UNIQUE,
+    browser_fingerprint TEXT NOT NULL,
+    ip_address TEXT NOT NULL,
+    user_agent TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_activity_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    FOREIGN KEY(admin_id) REFERENCES admins(id)
+);
+
+-- Admin Machine Locks Table (for tracking machine locks)
+CREATE TABLE IF NOT EXISTS admin_machine_locks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    admin_id INTEGER NOT NULL,
+    machine_token TEXT NOT NULL UNIQUE,
+    browser_fingerprint TEXT NOT NULL,
+    ip_address TEXT NOT NULL,
+    user_agent TEXT,
+    locked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY(admin_id) REFERENCES admins(id)
 );
 
 -- Comprehensive VEVO Visa Records Table
@@ -53,12 +106,12 @@ CREATE TABLE IF NOT EXISTS visa_applications (
 CREATE TABLE IF NOT EXISTS audit_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     admin_id INTEGER NOT NULL,
-    visa_id INTEGER NOT NULL,
+    visa_id INTEGER DEFAULT NULL,  -- Nullable for admin-only actions like LOGIN, LOGOUT, etc.
     action TEXT NOT NULL,
     previous_status TEXT,
     new_status TEXT,
     notes TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(admin_id) REFERENCES admins(id),
-    FOREIGN KEY(visa_id) REFERENCES visa_applications(id)
+    FOREIGN KEY(visa_id) REFERENCES visa_applications(id) ON DELETE SET NULL
 );

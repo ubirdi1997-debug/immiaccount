@@ -1,0 +1,907 @@
+/* Visa Application Flow - Framer-style UI */
+
+/* Progress Bar */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--line);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-dot.active {
+  background: var(--accent);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(8, 118, 106, 0.3);
+}
+
+.step-dot.completed {
+  background: var(--accent);
+  color: white;
+}
+
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: var(--line);
+  transition: background 0.3s ease;
+}
+
+.step-line.completed {
+  background: var(--accent);
+}
+
+/* Progress Container */
+.progress-container {
+  max-width: 600px;
+  margin: 0 auto 32px;
+  background: white;
+  border-radius: 100px;
+  padding: 4px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--accent);
+  border-radius: 100px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 20%;
+}
+
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 20px 8px;
+  font-size: 14px;
+}
+
+.progress-text #stepLabel {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.step-counter {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Main Flow Container */
+.visa-flow {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Step Panels */
+.step-panel {
+  display: none;
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-panel.active {
+  display: block;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Step Card */
+.step-card {
+  padding: 40px;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 24px;
+  margin: 28px 0;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+
+.field-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.field-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+  padding: 12px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(8, 118, 106, 0.1);
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* Phone Input */
+.phone-input {
+  display: flex;
+  gap: 8px;
+}
+
+.phone-input select {
+  width: auto;
+  padding: 12px;
+}
+
+.phone-input input {
+  flex: 1;
+}
+
+/* Upload Section */
+.upload-section {
+  margin: 24px 0;
+}
+
+.upload-box {
+  border: 2px dashed var(--line);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafbfc;
+}
+
+.upload-box:hover {
+  border-color: var(--accent);
+  background: #f0f7f6;
+}
+
+.upload-box svg {
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.upload-box p {
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+
+.upload-hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Visa Type Cards */
+.visa-types {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.visa-card {
+  background: white;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+
+.visa-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.visa-card.selected {
+  border-color: var(--accent);
+  background: #f0f7f6;
+}
+
+.visa-card h3 {
+  font-size: 16px;
+  margin: 12px 0 4px;
+  color: var(--ink);
+}
+
+.visa-card p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.visa-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.visa-details {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+/* Step Actions */
+.step-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.step-actions.centered {
+  justify-content: center;
+}
+
+.step-actions .primary {
+  min-width: 140px;
+}
+
+/* Review Section */
+.review-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.review-section {
+  background: #fafbfc;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.review-header h3 {
+  font-size: 15px;
+  color: var(--ink);
+  margin: 0;
+}
+
+.edit-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.review-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.review-item {
+  font-size: 14px;
+}
+
+.review-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.review-value {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Declaration */
+.declaration {
+  margin: 24px 0;
+  padding: 20px;
+  background: #fff8e6;
+  border-radius: 10px;
+  border: 1px solid #ffd699;
+}
+
+.checkbox-field {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.checkbox-field input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  margin-top: 2px;
+}
+
+.checkbox-field span {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Success Panel */
+.success-panel {
+  text-align: center;
+}
+
+.success-card {
+  padding: 60px 40px;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 24px;
+}
+
+.application-reference {
+  background: #f0f7f6;
+  border-radius: 14px;
+  padding: 28px;
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ref-label {
+  font-size: 13px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ref-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 1px;
+  font-family: 'SF Mono', monospace;
+}
+
+.ref-hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.next-steps {
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto 32px;
+}
+
+.next-steps h3 {
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.next-steps ul {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  padding-left: 20px;
+}
+
+/* Auto-save Indicator */
+.autosave-indicator {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: white;
+  border-radius: 100px;
+  padding: 10px 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.autosave-indicator.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.autosave-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.autosave-time {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .step-card {
+    padding: 24px;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .visa-types {
+    grid-template-columns: 1fr;
+  }
+  
+  .review-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .step-indicator {
+    gap: 4px;
+  }
+  
+  .step-line {
+    width: 20px;
+  }
+  
+  .step-actions {
+    flex-wrap: wrap;
+  }
+  
+  .step-actions button {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+/* Country Select Styling */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23627280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Date Input Styling */
+input[type="date"] {
+  font-family: inherit;
+}
+
+/* Focus visible for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar for cleaner look */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--line);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+/* Admin wizard specific styles */
+.wizard-header {
+  text-align: center;
+  padding: 32px;
+}
+
+.wizard-header h1 {
+  font-size: 24px;
+  margin: 8px 0;
+}
+
+.steps-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.step-indicator:not(.active):not(.completed) {
+  opacity: 0.5;
+}
+
+.steps-progress .step-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.step-indicator.active .step-dot {
+  background: var(--accent);
+  color: white;
+}
+
+.step-indicator.completed .step-dot {
+  background: #059669;
+  color: white;
+}
+
+.step-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.step-indicator.active .step-label,
+.step-indicator.completed .step-label {
+  color: var(--ink);
+}
+
+.steps-progress .step-line {
+  flex: 1;
+  height: 3px;
+  background: var(--line);
+  max-width: 60px;
+  border-radius: 2px;
+}
+
+/* Wizard step cards */
+.wizard-step {
+  animation: fadeInWizard 0.3s ease;
+}
+
+@keyframes fadeInWizard {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.wizard-step h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.wizard-step .muted {
+  margin-bottom: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.form-grid label.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-grid small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.form-grid input.invalid,
+.form-grid textarea.invalid {
+  border-color: #dc2626;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.step-actions.center {
+  justify-content: center;
+  gap: 16px;
+}
+
+/* VEVO lookup section */
+.vevo-lookup {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8fafb;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.vevo-lookup button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vevo-lookup button svg {
+  flex-shrink: 0;
+}
+
+/* Review section */
+.review-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.review-section {
+  background: #f8fafb;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.review-section h3 {
+  font-size: 14px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 16px;
+}
+
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.review-row:last-child {
+  border-bottom: none;
+}
+
+.review-row span:first-child {
+  color: var(--muted);
+}
+
+.review-row code,
+.review-row pre {
+  background: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.review-row pre {
+  max-width: 300px;
+  overflow-x: auto;
+  text-align: right;
+}
+
+.review-row blockquote {
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--accent);
+  background: white;
+  max-width: 400px;
+}
+
+.review-actions {
+  padding: 20px;
+  background: #fffbeb;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  margin-top: 3px;
+}
+
+/* Success card */
+.success-card {
+  text-align: center;
+  padding: 48px;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: #059669;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 24px;
+}
+
+.success-details {
+  max-width: 400px;
+  margin: 32px auto;
+  text-align: left;
+  background: #f8fafb;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row span:first-child {
+  color: var(--muted);
+}
+
+.detail-row code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  background: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-badge.submitted {
+  background: #fff8e6;
+  color: #d69e2e;
+}
+
+/* Autosave indicator */
+.autosave-indicator {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: var(--accent);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .steps-progress {
+    padding: 20px;
+    gap: 8px;
+  }
+  
+  .steps-progress .step-dot {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+  
+  .step-label {
+    font-size: 10px;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .wizard-header {
+    padding: 24px;
+  }
+  
+  .success-card {
+    padding: 32px 24px;
+  }
+}

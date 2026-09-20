@@ -1,0 +1,14 @@
+[Unit]
+Description=VEVO Reverse Proxy Injector Engine
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/vevo-app
+ExecStart=/usr/bin/node /var/www/vevo-app/proxy-server.js
+Restart=always
+Environment=NODE_ENV=production PORT=8080
+
+[Install]
+WantedBy=multi-user.target

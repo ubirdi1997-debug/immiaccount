@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Blocked - IMM Account Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .lock-animation {
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="max-w-lg w-full mx-4">
+        <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
+            <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 lock-animation">
+                <i class="fas fa-lock text-red-600 text-3xl"></i>
+            </div>
+            
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Access Blocked</h1>
+            <p class="text-gray-600 mb-6">Your account is locked to a specific machine/browser.</p>
+            
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left">
+                <div class="flex items-start">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 mt-0.5 mr-3"></i>
+                    <div>
+                        <p class="text-sm font-medium text-yellow-800">Security Restriction Active</p>
+                        <p class="text-sm text-yellow-700 mt-1">
+                            This admin account can only be accessed from the machine and browser where it was first logged in. For security reasons, you cannot log in from a different device or browser.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
+                <p class="text-sm text-blue-800 font-medium mb-2">
+                    <i class="fas fa-user-shield mr-2"></i> What to do?
+                </p>
+                <p class="text-sm text-blue-700">
+                    Contact your <strong>super administrator</strong> to reset your machine lock. They can unlock your account from the Super Admin Dashboard, allowing you to log in from this device.
+                </p>
+            </div>
+            
+            <div class="flex justify-center space-x-4">
+                <a href="/login" class="inline-flex items-center px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Login
+                </a>
+                <button onclick="showContactInfo()" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                    <i class="fas fa-envelope mr-2"></i> Contact Support
+                </button>
+            </div>
+            
+            <div id="contactInfo" class="hidden mt-6 pt-6 border-t border-gray-200">
+                <p class="text-sm text-gray-500 mb-2">If you need help, contact your super administrator:</p>
+                <p class="text-sm text-gray-700">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Account security is managed by the Super Admin Panel. Only super administrators can reset machine locks.
+                </p>
+            </div>
+        </div>
+        
+        <p class="text-center text-gray-500 text-sm mt-6">
+            &copy; 2024 IMM Account System. All rights reserved.
+        </p>
+    </div>
+    
+    <script>
+        function showContactInfo() {
+            document.getElementById('contactInfo').classList.remove('hidden');
+        }
+        
+        // Check URL for reason parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const reason = urlParams.get('reason');
+        if (reason === 'machine_lock') {
+            console.log('Blocked due to machine lock mismatch');
+        }
+    </script>
+</body>
+</html>

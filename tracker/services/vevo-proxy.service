@@ -1,0 +1,18 @@
+[Unit]
+Description=VEVO Proxy Service
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/vevo/tracker
+ExecStart=/usr/bin/node proxy-server.mjs
+Restart=always
+RestartSec=5
+Environment="PORT=8080"
+Environment="NODE_ENV=production"
+Environment="ORIGIN=https://vevo.usafe.in"
+EnvironmentFile=/home/ubuntu/vevo/.env
+
+[Install]
+WantedBy=multi-user.target

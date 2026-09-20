@@ -13,5 +13,12 @@
     "restart": "node deploy/manage.mjs restart",
     "stop": "node deploy/manage.mjs stop",
     "status": "node deploy/manage.mjs status"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cheerio": "^1.2.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "express-session": "^1.19.0"
   }
 }

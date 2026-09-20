@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VEVO Admin Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    /* Admin Dashboard Styles */
+    .admin-header {
+      background: var(--panel);
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 0 32px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .nav-tab {
+      padding: 16px 20px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .nav-tab:hover {
+      color: var(--ink);
+    }
+    
+    .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    
+    .tab-panel {
+      display: none;
+      padding: 32px;
+    }
+    
+    .tab-panel.active {
+      display: block;
+    }
+    
+    .search-bar {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .search-bar input {
+      flex: 1;
+    }
+    
+    .visa-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .visa-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    
+    .visa-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .visa-item-info {
+      flex: 1;
+    }
+    
+    .visa-item-info strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    
+    .visa-item-info small {
+      color: var(--muted);
+    }
+    
+    .status-badge {
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .status-In-Effect, .status-Approved {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    
+    .status-In-Progress {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    
+    .status-Not-In-Effect {
+      background: #e5e7eb;
+      color: #6b7280;
+    }
+    
+    .status-Cancelled, .status-Rejected {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    
+    .form-section {
+      margin-bottom: 32px;
+    }
+    
+    .form-section h3 {
+      font-size: 14px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--line);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px;
+      color: var(--muted);
+    }
+    
+    .audit-entry {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .audit-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .audit-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .audit-action {
+      font-weight: 600;
+    }
+    
+    .audit-time {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal {
+      background: white;
+      border-radius: 16px;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow: auto;
+      width: 90%;
+    }
+    
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-body {
+      padding: 24px;
+    }
+    
+    .modal-footer {
+      padding: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    
+    .array-field {
+      margin-bottom: 12px;
+    }
+    
+    .array-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .array-item input {
+      flex: 1;
+    }
+    
+    .hidden { display: none !important; }
+  </style>
+  <script src="/admin-dashboard.js" defer></script>
+</head>
+<body>
+  <header class="admin-header">
+    <div>
+      <div class="eyebrow">VEVO MANAGEMENT SYSTEM</div>
+      <h1 style="margin-top:4px;">Admin Dashboard</h1>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span id="admin-name" class="muted"></span>
+      <button id="logout" class="quiet">Sign Out</button>
+    </div>
+  </header>
+  
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="visas">Visa Applications</button>
+    <button class="nav-tab" data-tab="create">+ New Record</button>
+    <button class="nav-tab" data-tab="audit">Audit Log</button>
+  </nav>
+  
+  <main>
+    <!-- Login Panel -->
+    <section id="login-panel" class="tab-panel active" style="max-width:400px;margin:60px auto;">
+      <div class="card" style="padding:40px;">
+        <div class="eyebrow">SIGN IN</div>
+        <h2 style="margin:8px 0 24px;">Administrator Access</h2>
+        <p id="login-error" class="error" hidden></p>
+        <form id="login-form">
+          <label>Username
+            <input type="text" id="username" required autocomplete="username">
+          </label>
+          <label>Password
+            <input type="password" id="password" required autocomplete="current-password">
+          </label>
+          <button type="submit" class="primary" style="width:100%;margin-top:16px;">Sign In</button>
+        </form>
+      </div>
+    </section>
+    
+    <!-- Visa List Panel -->
+    <section id="visas-panel" class="tab-panel">
+      <div class="search-bar">
+        <input type="search" id="search-input" placeholder="Search by name, passport, or reference number...">
+        <button id="search-btn" class="primary">Search</button>
+        <button id="clear-search" class="quiet">Clear</button>
+      </div>
+      <div id="visa-list" class="visa-list"></div>
+    </section>
+    
+    <!-- Create/Edit Panel -->
+    <section id="create-panel" class="tab-panel">
+      <form id="visa-form">
+        <input type="hidden" id="visa-id">
+        <input type="hidden" id="visa-version">
+        
+        <div class="two-col">
+          <!-- Lookup Keys Section -->
+          <div class="card form-section">
+            <h3>🔑 Verification Keys</h3>
+            <label>Reference Type
+              <select id="ref-type" required>
+                <option value="TRN">TRN</option>
+                <option value="Grant Number">Grant Number</option>
+                <option value="Evidence Number">Evidence Number</option>
+                <option value="Password">Password</option>
+              </select>
+            </label>
+            <label>Reference Number <small>Required</small>
+              <input type="text" id="ref-number" required placeholder="e.g., EGVO123456">
+            </label>
+            <label>Passport Number <small>Required</small>
+              <input type="text" id="passport" required placeholder="e.g., A1234567">
+            </label>
+            <label>Country of Passport <small>Required</small>
+              <input type="text" id="country" required placeholder="e.g., INDIA">
+            </label>
+            <label>Date of Birth <small>Required (DD/MM/YYYY)</small>
+              <input type="text" id="dob" required placeholder="01/01/1990" pattern="\\d{2}/\\d{2}/\\d{4}">
+            </label>
+          </div>
+          
+          <!-- Personal Info Section -->
+          <div class="card form-section">
+            <h3>👤 Personal Information</h3>
+            <label>Given Names <small>Required</small>
+              <input type="text" id="given-names" required placeholder="e.g., John">
+            </label>
+            <label>Family Name <small>Required</small>
+              <input type="text" id="family-name" required placeholder="e.g., Smith">
+            </label>
+          </div>
+        </div>
+        
+        <div class="two-col">
+          <!-- Visa Details Section -->
+          <div class="card form-section">
+            <h3>📋 Visa Details</h3>
+            <label>Visa Class & Subclass <small>Required</small>
+              <input type="text" id="visa-class" required placeholder="e.g., Student (subclass 500)">
+            </label>
+            <label>Visa Description <small>Required</small>
+              <input type="text" id="visa-desc" required placeholder="e.g., Higher Education Sector">
+            </label>
+            <label>Visa Status
+              <select id="visa-status">
+                <option value="In Progress">In Progress</option>
+                <option value="Approved">Approved</option>
+                <option value="In Effect">In Effect</option>
+                <option value="Not In Effect">Not In Effect</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </label>
+            <label>Applicant Status
+              <select id="applicant-status">
+                <option value="Primary">Primary</option>
+                <option value="Secondary">Secondary</option>
+              </select>
+            </label>
+          </div>
+          
+          <!-- Dates Section -->
+          <div class="card form-section">
+            <h3>📅 Validity & Dates</h3>
+            <label>Grant Date <small>(DD Month YYYY)</small>
+              <input type="text" id="grant-date" placeholder="15 January 2025">
+            </label>
+            <label>Expiry Date <small>(DD Month YYYY)</small>
+              <input type="text" id="expiry-date" placeholder="15 January 2029">
+            </label>
+            <label>Must Not Arrive After
+              <input type="text" id="arrival-deadline" placeholder="15 January 2029">
+            </label>
+            <label>Period of Stay
+              <input type="text" id="period-stay" value="Until Visa Expiry">
+            </label>
+            <label>Entries Allowed
+              <select id="entries">
+                <option value="Multiple">Multiple</option>
+                <option value="Single">Single</option>
+              </select>
+            </label>
+            <label>Location at Grant
+              <select id="location">
+                <option value="Offshore">Offshore</option>
+                <option value="Onshore">Onshore</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        
+        <!-- Entitlements Section -->
+        <div class="card form-section">
+          <h3>💼 Work & Study Entitlements</h3>
+          <label>Work Entitlements
+            <div id="work-ents" class="array-field">
+              <div class="array-item"><input type="text" value="8105 - Work limitation (48 hours per fortnight during study session)"></div>
+            </div>
+            <button type="button" class="quiet" onclick="addArrayItem('work-ents')">+ Add Work Entitlement</button>
+          </label>
+          <label>Study Entitlements
+            <div id="study-ents" class="array-field">
+              <div class="array-item"><input type="text" value="8202 - Meet course requirements"></div>
+            </div>
+            <button type="button" class="quiet" onclick="addArrayItem('study-ents')">+ Add Study Entitlement</button>
+          </label>
+        </div>
+        
+        <!-- Conditions Section -->
+        <div class="card form-section">
+          <h3>⚠️ Visa Conditions</h3>
+          <label>Other Conditions
+            <div id="conditions" class="array-field">
+              <div class="array-item"><input type="text" value="8501 - Maintain adequate health insurance"></div>
+            </div>
+            <button type="button" class="quiet" onclick="addArrayItem('conditions')">+ Add Condition</button>
+          </label>
+        </div>
+        
+        <!-- Internal Notes -->
+        <div class="card form-section">
+          <h3>📝 Internal Notes (Not visible to applicants)</h3>
+          <textarea id="internal-notes" rows="4" placeholder="Enter any internal notes here..."></textarea>
+        </div>
+        
+        <div class="step-actions" style="margin-top:32px;">
+          <button type="button" class="quiet" onclick="resetForm()">Clear Form</button>
+          <div>
+            <button type="button" id="delete-btn" class="quiet" hidden style="margin-right:12px;color:#dc2626;">Delete Record</button>
+            <button type="submit" class="primary" id="save-btn">Create Record</button>
+          </div>
+        </div>
+      </form>
+    </section>
+    
+    <!-- Audit Log Panel -->
+    <section id="audit-panel" class="tab-panel">
+      <div id="audit-list"></div>
+    </section>
+  </main>
+  
+  <p id="message" role="status" aria-live="polite" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);"></p>
+</body>
+</html>

@@ -2,28 +2,25 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 
-// Database file path
-const dbPath = path.join(__dirname, 'immiaccount.db');
+// Database file path - use environment variable or default to local path
+const dbPath = process.env.DB_PATH || path.join(__dirname, 'immiaccount.db');
+
+// Ensure database directory exists
+const dbDir = path.dirname(dbPath);
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+}
 
 // Initialize the database
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
     } else {
-        console.log('Connected to the SQLite database.');
-        // Run initialization script
-        const initScript = fs.readFileSync(path.join(__dirname, 'init.sql')).toString();
-        db.exec(initScript, (err) => {
-            if (err) {
-                console.error('Error initializing database:', err.message);
-            } else {
-                console.log('Database initialized successfully.');
-            }
-        });
+        console.log('Connected to the SQLite database at:', dbPath);
     }
 });
 
-// Helper function for parameterized queries
+// Helper function for parameterized queries (SELECT)
 const query = (sql, params = []) => {
     return new Promise((resolve, reject) => {
         db.all(sql, params, (err, rows) => {

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Application Status</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="status.css">
+  <script src="status.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Application<span>tracker</span></a>
+    <div id="session" hidden>
+      <span id="identity"></span>
+      <button id="logout" class="quiet">Sign out</button>
+    </div>
+  </header>
+
+  <main class="status-container">
+    <!-- Quick Status Check -->
+    <section class="quick-check card">
+      <div class="eyebrow">QUICK CHECK</div>
+      <h1>Check Application Status</h1>
+      <p class="muted">Enter your Application Reference or TRN to check the current status.</p>
+      
+      <form id="check-form" class="check-form">
+        <div class="input-group">
+          <input type="text" id="reference" placeholder="e.g., VEVO-2024-ABC123 or TRN" required>
+          <button type="submit" class="primary">Check Status</button>
+        </div>
+        <p class="input-hint">Enter the reference number from your application or the TRN provided by the Department</p>
+      </form>
+    </section>
+
+    <!-- Status Result -->
+    <section id="status-result" class="status-result" hidden>
+      <!-- Status Header -->
+      <div class="status-header card">
+        <div class="status-badge" id="statusBadge">
+          <span class="status-dot"></span>
+          <span class="status-text">In Progress</span>
+        </div>
+        <div class="status-meta">
+          <div class="meta-item">
+            <span class="meta-label">Reference</span>
+            <span class="meta-value" id="refDisplay">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Submitted</span>
+            <span class="meta-value" id="submittedDate">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Last Updated</span>
+            <span class="meta-value" id="lastUpdated">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="timeline card">
+        <h2>Application Timeline</h2>
+        <div class="timeline-track" id="timelineTrack">
+          <!-- Timeline items will be populated by JS -->
+        </div>
+      </div>
+
+      <!-- Current Status Details -->
+      <div class="status-details card">
+        <h2>Current Status</h2>
+        <div class="status-detail-grid">
+          <div class="detail-card">
+            <div class="detail-icon">📄</div>
+            <div class="detail-content">
+              <span class="detail-label">Visa Type</span>
+              <span class="detail-value" id="visaType">-</span>
+            </div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-icon">📅</div>
+            <div class="detail-content">
+              <span class="detail-label">Processing Time</span>
+              <span class="detail-value" id="processingTime">-</span>
+            </div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-icon">👤</div>
+            <div class="detail-content">
+              <span class="detail-label">Applicant</span>
+              <span class="detail-value" id="applicantName">-</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="status-message" id="statusMessage">
+          <p>Your application is being processed. You will be notified when there is an update.</p>
+        </div>
+      </div>
+
+      <!-- Recent Updates -->
+      <div class="updates card">
+        <h2>Recent Updates</h2>
+        <div class="updates-list" id="updatesList">
+          <!-- Updates populated by JS -->
+        </div>
+      </div>
+
+      <!-- Refresh Action -->
+      <div class="refresh-bar">
+        <span class="last-checked">Last checked: <span id="lastChecked">Just now</span></span>
+        <button class="quiet" id="refreshBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          Refresh Status
+        </button>
+      </div>
+    </section>
+
+    <!-- Empty State -->
+    <section id="empty-state" class="empty-state">
+      <div class="empty-card card">
+        <div class="empty-icon">🔍</div>
+        <h2>Check Your Application Status</h2>
+        <p class="muted">Enter your Application Reference or TRN above to view real-time updates on your visa application.</p>
+        
+        <div class="help-section">
+          <h3>How to find your reference?</h3>
+          <ul>
+            <li>Application Reference: Found in your confirmation email (format: VEVO-YYYY-XXXXXX)</li>
+            <li>TRN: Transaction Reference Number from the Department of Home Affairs</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Not Found State -->
+    <section id="not-found" class="not-found" hidden>
+      <div class="not-found-card card">
+        <div class="not-found-icon">⚠️</div>
+        <h2>Application Not Found</h2>
+        <p class="muted">We couldn't find an application with that reference number.</p>
+        <ul class="suggestions">
+          <li>Double-check the spelling of your reference number</li>
+          <li>Make sure you're using the full reference (including VEVO- prefix)</li>
+          <li>If you just submitted, wait a few minutes and try again</li>
+        </ul>
+        <button class="primary" onclick="document.getElementById('reference').focus()">Try Again</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Live Update Indicator -->
+  <div class="live-indicator" id="liveIndicator" hidden>
+    <span class="live-dot"></span>
+    <span class="live-text">Live updates enabled</span>
+  </div>
+
+  <footer class="status-footer">
+    <p>For official visa verification, visit the <a href="https://online.immi.gov.au/evo/firstParty?actionType=query" target="_blank">Department of Home Affairs VEVO</a> website.</p>
+  </footer>
+</body>
+</html>

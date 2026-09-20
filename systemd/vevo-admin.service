@@ -1,0 +1,14 @@
+[Unit]
+Description=VEVO Admin Application Tracker
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/vevo-app
+ExecStart=/usr/bin/node /var/www/vevo-app/admin-server.js
+Restart=always
+Environment=NODE_ENV=production PORT=3000
+
+[Install]
+WantedBy=multi-user.target
